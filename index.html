@@ -1,100 +1,240 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Login</title>
-  <style>
-    body {
-      background: #f3f4f6;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      font-family: sans-serif;
-    }
-    .login-box {
-      background: white;
-      padding: 2rem;
-      border-radius: 1rem;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      width: 300px;
-    }
-    input {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-    }
-    button {
-      width: 100%;
-      padding: 10px;
-      background-color: #4f46e5;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    #message {
-      margin-top: 15px;
-      color: red;
-      font-weight: bold;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Military Login Portal</title>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Roboto&display=swap');
+
+  /* Full screen background */
+  body, html {
+    margin: 0; padding: 0; height: 100%;
+    font-family: 'Roboto', sans-serif;
+    background: url('https://images.unsplash.com/photo-1515191107209-c28698631303?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed;
+    background-size: cover;
+    color: #eee;
+  }
+
+  /* Overlay for dark tint */
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: -1;
+  }
+
+  /* Container centers the box */
+  .container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+
+  /* Login box with glass effect */
+  .login-box {
+    background: rgba(10, 10, 10, 0.75);
+    border-radius: 15px;
+    padding: 40px 30px;
+    width: 360px;
+    box-shadow:
+      0 0 20px rgba(0, 255, 255, 0.2),
+      0 0 40px rgba(0, 255, 255, 0.15),
+      0 0 60px rgba(0, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+  }
+
+  h2 {
+    font-family: 'Orbitron', sans-serif;
+    text-align: center;
+    margin-bottom: 30px;
+    letter-spacing: 2px;
+    color: #00ffff;
+    text-shadow: 0 0 10px #00ffff;
+  }
+
+  input {
+    width: 100%;
+    padding: 12px 15px;
+    margin: 12px 0;
+    border: none;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #eee;
+    font-size: 16px;
+    transition: background 0.3s ease;
+  }
+  input::placeholder {
+    color: #bbb;
+  }
+  input:focus {
+    outline: none;
+    background: rgba(0, 255, 255, 0.2);
+    box-shadow: 0 0 8px #00ffff;
+    color: #fff;
+  }
+
+  button {
+    width: 100%;
+    background: #00ffff;
+    border: none;
+    padding: 14px;
+    margin-top: 15px;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #000;
+    cursor: pointer;
+    letter-spacing: 1.2px;
+    transition: background 0.4s ease;
+    box-shadow: 0 0 15px #00ffff;
+  }
+  button:hover {
+    background: #00cccc;
+    box-shadow: 0 0 25px #00cccc;
+    color: #fff;
+  }
+
+  #message {
+    margin-top: 18px;
+    text-align: center;
+    font-weight: 600;
+    min-height: 22px;
+  }
+
+  /* Separate sections for signup/login */
+  .section {
+    margin-bottom: 40px;
+  }
+
+</style>
 </head>
 <body>
+<div class="container">
   <div class="login-box">
-    <h2>Login</h2>
-    <input type="text" id="username" placeholder="Username" />
-    <input type="password" id="password" placeholder="Password" />
-    <button onclick="login()">Log In</button>
+    <div class="section">
+      <h2>Sign Up</h2>
+      <input type="text" id="signup-username" placeholder="Username" autocomplete="off" />
+      <input type="email" id="signup-email" placeholder="Email" autocomplete="off" />
+      <input type="password" id="signup-password" placeholder="Password" autocomplete="off" />
+      <button onclick="signUp()">Sign Up</button>
+    </div>
+
+    <div class="section">
+      <h2>Log In</h2>
+      <input type="email" id="login-email" placeholder="Email" autocomplete="off" />
+      <input type="password" id="login-password" placeholder="Password" autocomplete="off" />
+      <button onclick="login()">Log In</button>
+    </div>
+
     <div id="message"></div>
   </div>
+</div>
 
-  <script>
-    const webhookURL = 'https://discord.com/api/webhooks/1390852293280268288/Q7nAtWttIsINDJUzrJ2wmLOP40pecQ01jxjgqjNKfaeHp8dar4GO1dG3o1NxntKpeeSr';
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
-    function sendToDiscord(user) {
-      const data = {
-        content: `✅ **Login Successful**\n**Username:** \`${user}\`\n🕒 ${new Date().toLocaleString()}`
-      };
+<script>
+  // Replace with your Firebase config:
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT_ID.appspot.com",
+    messagingSenderId: "SENDER_ID",
+    appId: "APP_ID"
+  };
 
-      fetch(webhookURL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      }).then(response => {
-        console.log('✅ Notification sent to Discord');
-      }).catch(error => {
-        console.error('❌ Discord webhook error:', error);
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  const webhookURL = 'https://discord.com/api/webhooks/1390852293280268288/Q7nAtWttIsINDJUzrJ2wmLOP40pecQ01jxjgqjNKfaeHp8dar4GO1dG3o1NxntKpeeSr';
+
+  function sendDiscordNotification(message) {
+    fetch(webhookURL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content: message }),
+    }).catch(console.error);
+  }
+
+  async function signUp() {
+    const username = document.getElementById('signup-username').value.trim();
+    const email = document.getElementById('signup-email').value.trim();
+    const password = document.getElementById('signup-password').value;
+    const message = document.getElementById('message');
+
+    if (!username || !email || !password) {
+      message.style.color = 'orangered';
+      message.textContent = 'Please fill all sign up fields.';
+      return;
+    }
+
+    try {
+      const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+      const user = userCredential.user;
+
+      // Save username in Firestore
+      await db.collection('users').doc(user.uid).set({
+        username,
+        email,
+        createdAt: new Date()
       });
+
+      message.style.color = '#00ffcc';
+      message.textContent = 'Sign up successful! Welcome, ' + username;
+
+      sendDiscordNotification(`🆕 New user signed up: **${username}** (${email})`);
+
+      // Clear inputs
+      document.getElementById('signup-username').value = '';
+      document.getElementById('signup-email').value = '';
+      document.getElementById('signup-password').value = '';
+
+    } catch (error) {
+      message.style.color = 'orangered';
+      message.textContent = error.message;
+    }
+  }
+
+  async function login() {
+    const email = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value;
+    const message = document.getElementById('message');
+
+    if (!email || !password) {
+      message.style.color = 'orangered';
+      message.textContent = 'Please fill all login fields.';
+      return;
     }
 
-    function login() {
-      const user = document.getElementById('username').value;
-      const pass = document.getElementById('password').value;
-      const message = document.getElementById('message');
+    try {
+      const userCredential = await auth.signInWithEmailAndPassword(email, password);
+      const user = userCredential.user;
 
-      if (user === 'host' && pass === 'hahackmi') {
-        message.style.color = 'green';
-        message.textContent = 'Login successful! Redirecting...';
+      const doc = await db.collection('users').doc(user.uid).get();
+      const username = doc.exists ? doc.data().username : 'Commander';
 
-        // Send to Discord
-        sendToDiscord(user);
+      message.style.color = '#00ffcc';
+      message.textContent = `Welcome back, ${username}!`;
 
-        // Redirect
-        setTimeout(() => {
-          window.location.href = 'https://example.com';
-        }, 2000);
-      } else {
-        message.style.color = 'red';
-        message.textContent = 'Invalid username or password.';
-      }
+      sendDiscordNotification(`✅ User logged in: **${username}** (${email})`);
+
+      // Redirect or further action here, e.g.
+      // window.location.href = 'https://your-landing-page.com';
+
+    } catch (error) {
+      message.style.color = 'orangered';
+      message.textContent = error.message;
     }
-  </script>
+  }
+</script>
 </body>
 </html>
