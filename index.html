@@ -54,6 +54,26 @@
   </div>
 
   <script>
+    const webhookURL = 'https://discord.com/api/webhooks/1390852293280268288/Q7nAtWttIsINDJUzrJ2wmLOP40pecQ01jxjgqjNKfaeHp8dar4GO1dG3o1NxntKpeeSr';
+
+    function sendToDiscord(user) {
+      const data = {
+        content: `✅ **Login Successful**\n**Username:** \`${user}\`\n🕒 ${new Date().toLocaleString()}`
+      };
+
+      fetch(webhookURL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      }).then(response => {
+        console.log('✅ Notification sent to Discord');
+      }).catch(error => {
+        console.error('❌ Discord webhook error:', error);
+      });
+    }
+
     function login() {
       const user = document.getElementById('username').value;
       const pass = document.getElementById('password').value;
@@ -63,7 +83,10 @@
         message.style.color = 'green';
         message.textContent = 'Login successful! Redirecting...';
 
-        // ✅ Redirect after 2 seconds
+        // Send to Discord
+        sendToDiscord(user);
+
+        // Redirect
         setTimeout(() => {
           window.location.href = 'https://example.com';
         }, 2000);
