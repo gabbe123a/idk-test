@@ -3,25 +3,52 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Military Login Portal with Fighter Jets & Tanks</title>
+<title>Military Login Portal</title>
 
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Roboto&display=swap');
-
-  /* Basic reset */
-  * {
-    box-sizing: border-box;
-  }
 
   body, html {
     margin: 0; padding: 0; height: 100%;
     font-family: 'Roboto', sans-serif;
     overflow: hidden;
-    background-color: #000;
+    background: #000;
     color: #eee;
+    position: relative;
   }
 
-  /* Container for everything */
+  .bg-container {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-auto-rows: 100vh;
+    gap: 0;
+    z-index: 0;
+    opacity: 0.3;
+  }
+
+  .bg-image {
+    object-fit: cover;
+    width: 100%;
+    height: 100vh;
+    filter: brightness(0.35) contrast(1.1) saturate(1.2);
+    transition: transform 1s ease;
+  }
+  .bg-image:hover {
+    transform: scale(1.05);
+    filter: brightness(0.6) contrast(1.15) saturate(1.4);
+    cursor: default;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 1;
+  }
+
   .container {
     height: 100vh;
     display: flex;
@@ -29,133 +56,89 @@
     align-items: center;
     position: relative;
     z-index: 10;
+    padding: 20px;
   }
 
-  /* Glass login box */
   .login-box {
-    background: rgba(10, 10, 10, 0.8);
-    border-radius: 20px;
-    padding: 40px 35px;
+    background: rgba(10, 10, 10, 0.85);
+    border-radius: 12px;
+    padding: 30px 30px;
     width: 380px;
-    box-shadow:
-      0 0 25px rgba(0, 255, 255, 0.4),
-      0 0 45px rgba(0, 255, 255, 0.3),
-      0 0 70px rgba(0, 255, 255, 0.2);
-    backdrop-filter: blur(15px);
-    z-index: 20;
+    color: #eee;
+    box-shadow: none;
+    backdrop-filter: blur(10px);
   }
 
   h2 {
     font-family: 'Orbitron', sans-serif;
     text-align: center;
-    margin-bottom: 30px;
-    letter-spacing: 2px;
-    color: #00ffff;
-    text-shadow: 0 0 12px #00ffff;
+    margin-bottom: 25px;
+    letter-spacing: 1.5px;
+    color: #00aabb;
+    text-shadow: none;
   }
 
   input {
     width: 100%;
-    padding: 14px 16px;
-    margin: 14px 0;
-    border: none;
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.1);
+    padding: 12px 14px;
+    margin: 12px 0;
+    border: 1px solid #333;
+    border-radius: 8px;
+    background: #111;
     color: #eee;
-    font-size: 17px;
-    transition: background 0.3s ease;
+    font-size: 16px;
+    transition: background 0.2s ease, border-color 0.2s ease;
   }
   input::placeholder {
-    color: #bbb;
+    color: #999;
   }
   input:focus {
     outline: none;
-    background: rgba(0, 255, 255, 0.3);
-    box-shadow: 0 0 10px #00ffff;
-    color: #fff;
+    background: #222;
+    border-color: #00aabb;
   }
 
   button {
     width: 100%;
-    background: #00ffff;
+    background: #007f8a;
     border: none;
-    padding: 16px;
-    margin-top: 18px;
-    border-radius: 12px;
-    font-size: 19px;
-    font-weight: 700;
-    color: #000;
+    padding: 14px;
+    margin-top: 16px;
+    border-radius: 8px;
+    font-size: 17px;
+    font-weight: 600;
+    color: #eee;
     cursor: pointer;
-    letter-spacing: 1.4px;
-    transition: background 0.4s ease;
-    box-shadow: 0 0 22px #00ffff;
+    letter-spacing: 1.2px;
+    transition: background 0.3s ease;
+    box-shadow: none;
   }
   button:hover {
-    background: #00cccc;
-    box-shadow: 0 0 32px #00cccc;
+    background: #005f65;
     color: #fff;
   }
 
   #message {
-    margin-top: 22px;
+    margin-top: 18px;
     text-align: center;
     font-weight: 600;
     min-height: 24px;
+    color: #ddd;
   }
 
   .section {
-    margin-bottom: 44px;
-  }
-
-  /* Background images container */
-  .bg-images {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    pointer-events: none;
-    overflow: hidden;
-    z-index: 1;
-  }
-
-  /* Each bg image styling */
-  .bg-image {
-    position: absolute;
-    opacity: 0.15;
-    filter: drop-shadow(0 0 6px #00ffff);
-    animation: floatAnimation 20s ease-in-out infinite;
-    user-select: none;
-  }
-
-  /* Different sizes */
-  .bg-image.small {
-    width: 120px;
-  }
-  .bg-image.medium {
-    width: 180px;
-  }
-  .bg-image.large {
-    width: 240px;
-  }
-
-  /* Float animation to gently move images up and down */
-  @keyframes floatAnimation {
-    0%, 100% {
-      transform: translateY(0) rotate(0deg);
-    }
-    50% {
-      transform: translateY(-15px) rotate(5deg);
-    }
+    margin-bottom: 36px;
   }
 </style>
 </head>
 <body>
 
-<div class="bg-images">
-  <!-- Fighter jets and tanks as transparent PNGs -->
-  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/JAS_39_Gripen_no_bg.png/800px-JAS_39_Gripen_no_bg.png" alt="Gripen" class="bg-image medium" style="top: 10%; left: 15%; animation-delay: 0s;" />
-  <img src="https://upload.wikimedia.org/wikipedia/commons/3/3b/F-35_Lighting_II_transparent.png" alt="F-35" class="bg-image large" style="top: 40%; left: 5%; animation-delay: 5s;" />
-  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/M1_Abrams_Tank_US_Army.png/800px-M1_Abrams_Tank_US_Army.png" alt="M1 Abrams Tank" class="bg-image medium" style="top: 70%; left: 20%; animation-delay: 10s;" />
-  <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/F-16_Fighting_Falcon_transparent.png" alt="F-16" class="bg-image small" style="top: 25%; right: 15%; animation-delay: 3s;" />
-  <img src="https://upload.wikimedia.org/wikipedia/commons/9/98/T-90_Main_Battle_Tank_in_2017.png" alt="T-90 Tank" class="bg-image medium" style="top: 65%; right: 25%; animation-delay: 7s;" />
+<div class="bg-container">
+  <img class="bg-image" src="https://cdn.wallpapersafari.com/46/3/v9ASPq.jpg" alt="Fighter jet 1" />
+  <img class="bg-image" src="https://www.armyrecognition.com/templates/yootheme/cache/f4/Focus_Impact_of_the_Barracuda_MCS_Camouflage_on_the_Stridsvagn_122-f4307aaf.jpeg" alt="Tank 1" />
+  <img class="bg-image" src="https://www.thedrive.com/uploads/2023/01/19/CV90-Sweden-Ukraine.jpg?auto=webp" alt="Tank 2" />
+  <img class="bg-image" src="https://i.pinimg.com/originals/c1/f4/c4/c1f4c4b56a1df88c04f163a9872d86d5.jpg" alt="Fighter jet 2" />
+  <img class="bg-image" src="https://wallpapercrafter.com/desktop/325066-Military-Boeing-FA-18EF-Super-Hornet-Phone-Wallpaper.jpg" alt="Fighter jet 3" />
 </div>
 
 <div class="container">
@@ -185,7 +168,7 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
 <script>
-  // Your Firebase config here - replace with yours
+  // Replace these with your Firebase config
   const firebaseConfig = {
     apiKey: "YOUR_API_KEY",
     authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
@@ -215,4 +198,66 @@
     const password = document.getElementById('signup-password').value;
     const message = document.getElementById('message');
 
-    if (!username || !email || !password
+    if (!username || !email || !password) {
+      message.style.color = 'orangered';
+      message.textContent = 'Please fill all sign up fields.';
+      return;
+    }
+
+    try {
+      const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+      const user = userCredential.user;
+
+      await db.collection('users').doc(user.uid).set({
+        username,
+        email,
+        createdAt: new Date()
+      });
+
+      message.style.color = '#00ccaa';
+      message.textContent = 'Sign up successful! Welcome, ' + username;
+
+      sendDiscordNotification(`🆕 New user signed up: **${username}** (${email})`);
+
+      document.getElementById('signup-username').value = '';
+      document.getElementById('signup-email').value = '';
+      document.getElementById('signup-password').value = '';
+
+    } catch (error) {
+      message.style.color = 'orangered';
+      message.textContent = error.message;
+    }
+  }
+
+  async function login() {
+    const email = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value;
+    const message = document.getElementById('message');
+
+    if (!email || !password) {
+      message.style.color = 'orangered';
+      message.textContent = 'Please fill all login fields.';
+      return;
+    }
+
+    try {
+      const userCredential = await auth.signInWithEmailAndPassword(email, password);
+      const user = userCredential.user;
+
+      const doc = await db.collection('users').doc(user.uid).get();
+      const username = doc.exists ? doc.data().username : 'Commander';
+
+      message.style.color = '#00ccaa';
+      message.textContent = `Welcome back, ${username}!`;
+
+      sendDiscordNotification(`✅ User logged in: **${username}** (${email})`);
+
+    } catch (error) {
+      message.style.color = 'orangered';
+      message.textContent = error.message;
+    }
+  }
+</script>
+
+</body>
+</html>
