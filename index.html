@@ -171,7 +171,7 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
 <script>
-  // Replace these with your Firebase config
+  // Replace these with your Firebase config values
   const firebaseConfig = {
     apiKey: "YOUR_API_KEY",
     authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
@@ -253,13 +253,4 @@
       message.style.color = '#00ccaa';
       message.textContent = `Welcome back, ${username}!`;
 
-      sendDiscordNotification(`✅ User logged in: **${username}** (${email})`);
-
-    } catch (error) {
-      message.style.color = 'orangered';
-      message.textContent = error.message;
-    }
-  }
-</script>
-
-</body
+      sendDiscordNotification
